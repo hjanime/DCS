@@ -1,0 +1,75 @@
+---
+title: "The Differential Contact Score Package"
+author: "Zachary McCaw"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.width=1.5*3, fig.height=1.5*2, fig.align="center", fig.path='Figs/',echo=T, warning=F, message=F, cache=T);
+# rmarkdown::latex_dependency(name="bm")
+```
+
+## Data Format
+Experiment is structured as a list of data.frames, one for each chromosome. 
+```{r D01, include=T}
+# Data
+X = DCS::hicExpExample;
+# Chromosomes
+names(X);
+# Data.frame structure
+head(X[["chr18"]]);
+```
+
+## Border Scores
+Calculates a border score by comparing mean signal intensity in the flanking regions with signal intensity in the intervening region. Required arguments are the HiC experiment, names of the columns in each data.frame containing the normalized HiC signal, and the allocation of samples to treatment groups. Output is a list with one data.frame per group. `Border` is the calculated border score. `minPix` and `minProp` are the minimum number and proportion of pixels observed in one of the aggregation regions. 
+```{r B01, include=T}
+# Data
+X = DCS::hicExpExample;
+# Samples
+s = c("Auxin_rep1","Auxin_rep2","Ctrl_rep1","Ctrl_rep2");
+# Sample groupings
+g = c(1,1,0,0);
+# Calculate border scores
+Border = DCS::getBorderScores(X=X,s=s,g=g,cores=2);
+# Output structure
+plyr::llply(.data=Border,.fun=head);
+```
+
+## Visualization
+
+#### Basic heat-map 
+Basic HiC heat-map displaying a test statistic, here the log fold change, within each pixel.  
+```{r V01, include=T}
+library(ggplot2);
+# Data
+X = DCS::hicPlotExample;
+X0 = X[,c("i","j","lfc_1v0")]
+X1 = X[,c("i","j","Auxin_log2Mean","Ctrl_log2Mean")];
+# Basic HiC plot
+Qb = DCS::plotHicBasic(A=X0,f=120,h.u=40,h.d=40,l.u=40,l.d=40);
+qb = Qb$Plot;
+qb = qb + scale_fill_gradient2(midpoint=0,limits=c(Qb$minSignal,Qb$maxSignal));
+print(qb);
+```
+
+#### Smoothed Heat-map
+HiC heat-map with the signal smoothed against the separation of the interacting regions, i.e. against the distance from the base of the figure.   
+```{r V02, include=T}
+# Smoothed HiC Plot
+Qs = DCS::plotHicSmoothed(A=X,f=120,h.u=40,h.d=40,l.u=40,l.d=40);
+qs = Qs$Plot;
+qs = qs + scale_fill_gradient2(midpoint=0,limits=c(Qs$minSignal,Qs$maxSignal));
+print(qs);
+```
+
+#### Grouped Heat-map
+HiC heat-maps plotted separately for each treatment group, optionally smoothed.  
+```{r V03, include=T}
+q = DCS::plotHicGrouped(A=X1,f=120,h.u=40,h.d=40,l.u=40,l.d=40,smooth=T);
+print(q);
+```
