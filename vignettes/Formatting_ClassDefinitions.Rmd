@@ -1,0 +1,179 @@
+---
+title: "Formatting and Class Definitions"
+author: "Zachary McCaw"
+date: "Updated: 10/30/2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Formatting and Class Definitions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(fig.width=1.5*3, fig.height=1.5*2, fig.align="center", fig.path='Figs/',echo=T, warning=F, message=F, cache=T, results='hold');
+# rmarkdown::latex_dependency(name="bm")
+```
+
+## Contents
+
+* [Data Formatting](#data-formatting)
+* [DCS Objects](#dcs-objects)
+* [FS Objects](#fs-objects)
+
+## Data Formatting
+
+#### Extraction from SparseHiC Objects
+
+Input contact matrices for individual chromosomes are expected to have class `dtCMatrix`, defined in the `Matrix` package. If starting from a `sparseHiCdatum`, defined in the `sparseHiC` package, contact matrices of class `dtCMatrix` are available in the `resolutionNamedList`. The `sparseHiC` package is available on  [github](https://github.com/aryeelab/sparseHiC.git). The follow example demonstrates extraction of a contact matrix from a `sparseHiCdatum`.
+
+```{r}
+# Installation of sparseHiC package:
+# devtools::install_github("aryeelab/sparseHiC");
+library(DCS);
+# Example of sparse HiC datum
+cat("Class of sHicDatum:\n");
+class(sHicDatum);
+cat("\n");
+cat("Available Resolutions:\n");
+names(sHicDatum@resolutionNamedList);
+cat("\n");
+cat("Available Chromosomes at 40kb Resolution:\n");
+names(sHicDatum@resolutionNamedList[["40000"]]);
+cat("\n");
+# Extracting Contact Matrix for Chromosome 1 at 40kb Resolution
+M = sHicDatum@resolutionNamedList[["40000"]]$chr1;
+cat("Class of Contact Matrix:\n");
+class(M);
+```
+
+#### Contact Matrix Aggregation
+
+Contact matrices for individual chromosomes are formatted as objects of class `DCSchr`. Chromosomes from the same subject are aggregated into a sample, and samples are combined into an experiment of class `DCSexp`. In the following, a sample of HiC data available from the NCBI GEO, accession **GSE98671**, are considered. `A1` and `A2` contain data from MES cells depleted of CTCF using auxin. `C1` and `C2` contain data from control MES cells. Each is a list of two `dtCMatrix`-class sparse contact matrices for chromosomes `chr1` and `chr2`. The contact matrices for individual chromosomes are formatted into `DCSchr` objects and aggregated into a sample using `createDCSsmp`. The sample level data are combined into an experiment using `createDCSexp`.   
+
+```{r}
+# Auxin 
+A1 = DCS::Auxin_rep1;
+A2 = DCS::Auxin_rep2;
+# Control
+C1 = DCS::Control_rep1;
+C2 = DCS::Control_rep2;
+# Combine sparse matrices for individual chromosomes within a sample
+Auxin1 = DCS::createDCSsmp(L=A1,chr=c("1","2"),smp="Aux.R1",group=0);
+Auxin2 = DCS::createDCSsmp(L=A2,chr=c("1","2"),smp="Aux.R2",group=0);
+Ctrl1 = DCS::createDCSsmp(L=C1,chr=c("1","2"),smp="Ctrl.R1",group=1);
+Ctrl2 = DCS::createDCSsmp(L=C2,chr=c("1","2"),smp="Ctrl.R2",group=1);
+# Combine samples into an experiment
+Exp = DCS::createDCSexp(L=list(Auxin1,Auxin2,Ctrl1,Ctrl2));
+head(Exp);
+```
+
+## Differential Contact Score Objects
+
+#### Structure
+
+An object of class `DCSchr` has the following slots:
+
+* `@chr`, a string naming the chromosome.
+* `@Coord`, an $n_{p}$ by 3 matrix of pixel coordinates, where $n_{p}$ is the number of pixels on the chromosome. `@Coord` has columns $(i,j,d)$, where $i$ and $j$ index pixel position, and $d = (j-i)$ is the separation between the interacting loci. Coordinates are in upper-triangular format, i.e. $i \leq j$.
+* `@Counts`, an $n_{p}$ by $n_{s}$ matrix, where $n_{s}$ is the number of samples.
+* `@groups`, a factor of group assignments for the samples.
+* `@samples`, a character vector of sample names.
+* `@Stats`, an $n_{p}$ by $n_{q}$ data.frame, where $n_{q}$ is the number of available test statistics.
+
+```{r}
+# Extracting chromosome one
+A.1 = Exp@Data[["1"]];
+# Structure of a DCS chromosome
+str(A.1);
+```
+
+An object of class `DCSexp` has the following slots:
+
+* `@chrs`, a character vector of chromosome names.
+* `@Data`, is a list of `DCSchr`s, with names corresponding to `@chrs`.
+* `@groups`, a factor of group assignments for the samples.
+* `@samples`, a character vector of sample names.
+
+Note that the `@groups` and `@samples` slots for the overall `DCSexp` should match the corresponding slots of the component `DCSchr`s. 
+
+```{r D03, include=T}
+# Structure of a DCS experiment
+str(Exp);
+```
+
+#### Methods
+
+* A `summary` method is available for objects of class `DCSexp`. Two matrices are printed and returned. The first describes the pixels and maximal pixel separation for each chromosome in the experiment. The second describes the samples and their group assignments. 
+* A `subset` method is available for objects of class `DCSchr`. Subsetting by either pixel or maximal pixel separation is available. To subset by pixel, supply a logical vector with length equal to the number of pixels. To subset by pixel separation, provided a (numeric) maximal separation. 
+* A `subset` method is available for objects of class `DCSexp`. Subsetting by chromosome and maximal pixel separation is available. To subset by chromosome, specify the chromosomes to retain. To subset by pixel separation, provided a (numeric) maximal separation. 
+* An `as.data.frame` method is available for objects of class `DCSchr` and `DCSexp`. 
+
+```{r}
+# Summary of DCS Experiment
+cat("DCS Experiment Summary:\n");
+S = summary(Exp);
+cat("\n");
+# Subsetting a DCS Chromosome using a logical vector
+S = subset(x=A.1,pix=(A.1@Coord[,"i"]==80));
+# Subsetting a DCS Chromosome
+S = subset(x=A.1,dmax=10);
+# Subsetting a DCS Experiment
+S = subset(x=Exp,chrs=c("1"),dmax=10);
+# Coercion to data.frame
+cat("Head of Experiment Matrix, Chromosome 1, Max Separation 10, following Coercion:\n");
+S.df = as.data.frame(S);
+head(S.df);
+```
+
+## Focal Stat Objects
+
+#### Structure
+
+An object of class `FSchr` has the following slots:
+
+* `@chr`, a string naming the chromosome.
+* `@foci`, a numeric vector of foci. A **focus** refers to a pixel for which $i = j$, i.e. a pixel on the diagonal of the contact matrix. 
+* `@groups`, a factor naming the groups. Data in an `FSchr` are summarized at the group level.
+* `@Stats`, a list of data.frames with names corresponding to `@groups`. Each data frame is $n_{f}$ by $n_{q}$, where $n_{f}$ is the number of foci, and $n_{q}$ is the number of available statistics. 
+
+```{r}
+# Extracting chromosome one
+B.1 = DCS::B@Data[["1"]];
+# Structure of a FS chromosome
+str(B.1);
+```
+
+An object of class `FSexp` has the following slots:
+
+* `@chrs`, a character vector of chromosome names.
+* `@Data`, a list of `FSchr`s, with names corresponding to `@chrs`.
+* `@groups`, a factor naming the groups. Data in an `FSexp` are summarized at the group level.
+
+Note that the `@groups` slots for the overall `FSexp` should match the corresponding slot of the component `FSchr`s.  
+
+```{r}
+# Structure of a FS experiment
+str(DCS::B);
+```
+
+#### Methods
+
+* A `subset` method is available for objects of class `FSchr`. Subsetting by focus and group is available. To subset by focus, supply a logical vector with length equal to the number of foci. To subset by group, specify the group(s) to retain.
+* A `subset` method is available for objects of class `FSexp`. Subsetting by chromosome and group is available. To subset chromosome, specify the chromosome(s) to retain. To subset by group, specify the group(s) to retain.
+* An `as.data.frame` method is available for objects of class `FSchr` and `FSexp`. 
+
+```{r}
+cat("Number of Foci:\n");
+(nf = length(B.1@foci));
+cat("\n");
+# Subsetting a FSchr using a logical vector
+S = subset(x=B.1,foci=c(rep(T,10),rep(F,nf-10)));
+# Subsetting a FSchr by group
+S = subset(x=B.1,group=c("0"));
+# Subsetting a FSexp by chromsome and group
+S = subset(x=B,chrs=c("1"),group=c("1"));
+# Coercion to data.frame
+cat("Head of Border Score Matrix, Chromosome 1, Group 1, following Coercion:\n");
+S.df = as.data.frame(S);
+head(S.df);
+```

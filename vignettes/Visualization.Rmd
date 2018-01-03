@@ -1,0 +1,64 @@
+---
+title: "Visualization"
+author: "Zachary McCaw"
+date: "Updated: 11/27/2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Visualization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(fig.width=2.0*3, fig.height=1.5*2, fig.align="center", fig.path='Figs/',echo=T, warning=F, message=F, cache=T, results='hold');
+# rmarkdown::latex_dependency(name="bm")
+```
+
+## Contents
+This vignette describes functions available for visualizing a normalized `DCSexp`. 
+
+## Visualization
+
+#### Pixel-level Statistic
+
+`plotHicStat` creates a heatmap plotting a statistic, such as the log fold change, at each pixel within a region. Data are supplied as either a `DCSexp`, together with the chromosome `chr` of interest, or directly as a `DCSchr`. The statistic `stat` to plot should correspond with a column in the `@Stats` slot of the focal `DCSchr`. `f` specifies the focus of the plot. `h.u` and `h.d` specify the length of the domain, upstream and downstream of the focus, whose interactions are included in the plot. For example, if $h_{u}=2$ and $h_{d}=1$, then the pixels included in the plot are:
+
+$$ \mathcal{P} = \left\{(i,j):i\leq j, |i-f|\leq h_{u}=2,|j-f|\leq h_{l}=1\right\} $$
+
+```{R, include=T}
+# Import normalized HiC experiment
+Z = DCS::Z;
+# Plot log fold change 
+Q = DCS::plotHicStat(In=Z,stat="lfc_1v0",f=88,chr="1",h.u=2,h.d=1,l.u=0,l.d=0);
+print(Q$Plot);
+```
+
+The arguments `l.u` and `l.d` allow for the addition of flanks upstream and downstream of the domains specified by `h.u` and `h.d`:
+
+```{R, include=T}
+# Plot with flanks
+Q = DCS::plotHicStat(In=Z,stat="lfc_1v0",f=88,chr="1",h.u=2,h.d=1,l.u=1,l.d=2);
+print(Q$Plot);
+```
+
+Loess smoothing of the statistic by pixel separation $d_{ij} = |i-j|$ is available using `smooth=T`. Smoothing is conducted separately in each region delimited by the dashed guidelines. If a region contains fewer than 10 pixels, a simple average is taken. If the region contains between 10 and 20 pixels, loess using linear polynomials is applied. If the region contains 20 or more pixels, loess using quadratic polynomials is applied. 
+
+```{R, include=T}
+# Plot smoothed log fold change
+Q = DCS::plotHicStat(In=Z,stat="lfc_1v0",f=88,chr="1",h.u=10,h.d=10,l.u=2,l.d=2,smooth=T);
+print(Q$Plot);
+```
+
+#### Log HiC Signal
+
+`plotHicSignal` creates a heatmap plotting the log HiC signal at each pixel within a region. The signal is extracted from the `@Counts` slot of the focal `DCSchr`. A separate plot is constructed for each group. For groups with multiple samples, the mean HiC signal is calculated before applying the logarithm. The plotting domain is specified as for `plotHicStat`, with optional smoothing. Color scales are standardized across groups. 
+
+```{r, include=T, fig.height=3*2}
+# Plot raw HiC signal
+Qr = DCS::plotHicSignal(In=Z,f=88,chr="1",h.u=10,h.d=10,l.u=10,l.d=10,smooth=F);
+print(Qr$Plot);
+# Plot smoothed HiC signal
+Qs = DCS::plotHicSignal(In=Z,f=88,chr="1",h.u=10,h.d=10,l.u=10,l.d=10,smooth=T);
+print(Qs$Plot);
+```
+

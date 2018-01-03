@@ -2,10 +2,7 @@
 % Please edit documentation in R/BorderScore.R
 \name{triCoord}
 \alias{triCoord}
-\title{Purpose : Functions to calculate a border score for each focus in the genome.
-Border scores compare the signal intensity in a putative inter-TAD region with
-the mean border score in the flanking regions. 
-Enumerate Inter-Tad Region}
+\title{Enumerate Inter-Tad Region}
 \usage{
 triCoord(f, d, l, u)
 }

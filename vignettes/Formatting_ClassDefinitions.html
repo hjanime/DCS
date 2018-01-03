@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Zachary McCaw" />
+
+
+<title>Formatting and Class Definitions</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Formatting and Class Definitions</h1>
+<h4 class="author"><em>Zachary McCaw</em></h4>
+<h4 class="date"><em>Updated: 10/30/2017</em></h4>
+
+
+
+<div id="contents" class="section level2">
+<h2>Contents</h2>
+<ul>
+<li><a href="#data-formatting">Data Formatting</a></li>
+<li><a href="#dcs-objects">DCS Objects</a></li>
+<li><a href="#fs-objects">FS Objects</a></li>
+</ul>
+</div>
+<div id="data-formatting" class="section level2">
+<h2>Data Formatting</h2>
+<div id="extraction-from-sparsehic-objects" class="section level4">
+<h4>Extraction from SparseHiC Objects</h4>
+<p>Input contact matrices for individual chromosomes are expected to have class <code>dtCMatrix</code>, defined in the <code>Matrix</code> package. If starting from a <code>sparseHiCdatum</code>, defined in the <code>sparseHiC</code> package, contact matrices of class <code>dtCMatrix</code> are available in the <code>resolutionNamedList</code>. The <code>sparseHiC</code> package is available on <a href="https://github.com/aryeelab/sparseHiC.git">github</a>. The follow example demonstrates extraction of a contact matrix from a <code>sparseHiCdatum</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Installation of sparseHiC package:</span>
+<span class="co"># devtools::install_github(&quot;aryeelab/sparseHiC&quot;);</span>
+<span class="kw">library</span>(DCS);
+<span class="co"># Example of sparse HiC datum</span>
+<span class="kw">cat</span>(<span class="st">&quot;Class of sHicDatum:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">class</span>(sHicDatum);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">cat</span>(<span class="st">&quot;Available Resolutions:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">names</span>(sHicDatum@resolutionNamedList);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">cat</span>(<span class="st">&quot;Available Chromosomes at 40kb Resolution:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">names</span>(sHicDatum@resolutionNamedList[[<span class="st">&quot;40000&quot;</span>]]);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="co"># Extracting Contact Matrix for Chromosome 1 at 40kb Resolution</span>
+M =<span class="st"> </span>sHicDatum@resolutionNamedList[[<span class="st">&quot;40000&quot;</span>]]$chr1;
+<span class="kw">cat</span>(<span class="st">&quot;Class of Contact Matrix:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="kw">class</span>(M);</code></pre></div>
+<pre><code>## Class of sHicDatum:
+## [1] &quot;sparseHiCdatum&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;sparseHiC&quot;
+## 
+## Available Resolutions:
+## [1] &quot;20000&quot; &quot;40000&quot;
+## 
+## Available Chromosomes at 40kb Resolution:
+## [1] &quot;chr1&quot;
+## 
+## Class of Contact Matrix:
+## [1] &quot;dtCMatrix&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;Matrix&quot;</code></pre>
+</div>
+<div id="contact-matrix-aggregation" class="section level4">
+<h4>Contact Matrix Aggregation</h4>
+<p>Contact matrices for individual chromosomes are formatted as objects of class <code>DCSchr</code>. Chromosomes from the same subject are aggregated into a sample, and samples are combined into an experiment of class <code>DCSexp</code>. In the following, a sample of HiC data available from the NCBI GEO, accession <strong>GSE98671</strong>, are considered. <code>A1</code> and <code>A2</code> contain data from MES cells depleted of CTCF using auxin. <code>C1</code> and <code>C2</code> contain data from control MES cells. Each is a list of two <code>dtCMatrix</code>-class sparse contact matrices for chromosomes <code>chr1</code> and <code>chr2</code>. The contact matrices for individual chromosomes are formatted into <code>DCSchr</code> objects and aggregated into a sample using <code>createDCSsmp</code>. The sample level data are combined into an experiment using <code>createDCSexp</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Auxin </span>
+A1 =<span class="st"> </span>DCS::Auxin_rep1;
+A2 =<span class="st"> </span>DCS::Auxin_rep2;
+<span class="co"># Control</span>
+C1 =<span class="st"> </span>DCS::Control_rep1;
+C2 =<span class="st"> </span>DCS::Control_rep2;
+<span class="co"># Combine sparse matrices for individual chromosomes within a sample</span>
+Auxin1 =<span class="st"> </span>DCS::<span class="kw">createDCSsmp</span>(<span class="dt">L=</span>A1,<span class="dt">chr=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>,<span class="st">&quot;2&quot;</span>),<span class="dt">smp=</span><span class="st">&quot;Aux.R1&quot;</span>,<span class="dt">group=</span><span class="dv">0</span>);
+Auxin2 =<span class="st"> </span>DCS::<span class="kw">createDCSsmp</span>(<span class="dt">L=</span>A2,<span class="dt">chr=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>,<span class="st">&quot;2&quot;</span>),<span class="dt">smp=</span><span class="st">&quot;Aux.R2&quot;</span>,<span class="dt">group=</span><span class="dv">0</span>);
+Ctrl1 =<span class="st"> </span>DCS::<span class="kw">createDCSsmp</span>(<span class="dt">L=</span>C1,<span class="dt">chr=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>,<span class="st">&quot;2&quot;</span>),<span class="dt">smp=</span><span class="st">&quot;Ctrl.R1&quot;</span>,<span class="dt">group=</span><span class="dv">1</span>);
+Ctrl2 =<span class="st"> </span>DCS::<span class="kw">createDCSsmp</span>(<span class="dt">L=</span>C2,<span class="dt">chr=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>,<span class="st">&quot;2&quot;</span>),<span class="dt">smp=</span><span class="st">&quot;Ctrl.R2&quot;</span>,<span class="dt">group=</span><span class="dv">1</span>);
+<span class="co"># Combine samples into an experiment</span>
+Exp =<span class="st"> </span>DCS::<span class="kw">createDCSexp</span>(<span class="dt">L=</span><span class="kw">list</span>(Auxin1,Auxin2,Ctrl1,Ctrl2));
+<span class="kw">head</span>(Exp);</code></pre></div>
+<pre><code>## Chromosome:       1
+## Samples:      Aux.R1  Aux.R2  Ctrl.R1  Ctrl.R2 
+## Groups:   0  0  1  1 
+## Pixels:   325 
+## 
+## Data: 
+##    i  j d    Aux.R1   Aux.R2   Ctrl.R1   Ctrl.R2
+## 1 76 76 0 212.04500 77.02086 152.96079 105.11542
+## 2 76 77 1 159.54523 73.57463  90.55706 105.65917
+## 3 76 78 2 110.35403 38.92145  81.86155  59.86963
+## 4 76 79 3  89.76870 22.50423  19.32057  26.18310
+## 5 76 80 4  57.42157 15.05683  61.28800  37.02741
+## 6 76 81 5  31.44170  7.23277  33.97521  34.99212
+## 
+## Chromosome:       2
+## Samples:      Aux.R1  Aux.R2  Ctrl.R1  Ctrl.R2 
+## Groups:   0  0  1  1 
+## Pixels:   325 
+## 
+## Data: 
+##    i  j d    Aux.R1   Aux.R2   Ctrl.R1   Ctrl.R2
+## 3 76 76 0 247.61850 90.09601 167.68592 169.00690
+## 4 76 77 1 149.73209 45.04939 108.43718  91.76675
+## 5 76 78 2  98.79389 23.03154  68.04000  58.51669
+## 6 76 79 3  77.32843 25.09985  52.25259  39.72100
+## 7 76 80 4  71.62674 17.67890  43.26727  36.33301
+## 8 76 81 5  46.02463 17.07255  38.31828  26.87674</code></pre>
+</div>
+</div>
+<div id="differential-contact-score-objects" class="section level2">
+<h2>Differential Contact Score Objects</h2>
+<div id="structure" class="section level4">
+<h4>Structure</h4>
+<p>An object of class <code>DCSchr</code> has the following slots:</p>
+<ul>
+<li><code>@chr</code>, a string naming the chromosome.</li>
+<li><code>@Coord</code>, an <span class="math inline">\(n_{p}\)</span> by 3 matrix of pixel coordinates, where <span class="math inline">\(n_{p}\)</span> is the number of pixels on the chromosome. <code>@Coord</code> has columns <span class="math inline">\((i,j,d)\)</span>, where <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> index pixel position, and <span class="math inline">\(d = (j-i)\)</span> is the separation between the interacting loci. Coordinates are in upper-triangular format, i.e. <span class="math inline">\(i \leq j\)</span>.</li>
+<li><code>@Counts</code>, an <span class="math inline">\(n_{p}\)</span> by <span class="math inline">\(n_{s}\)</span> matrix, where <span class="math inline">\(n_{s}\)</span> is the number of samples.</li>
+<li><code>@groups</code>, a factor of group assignments for the samples.</li>
+<li><code>@samples</code>, a character vector of sample names.</li>
+<li><code>@Stats</code>, an <span class="math inline">\(n_{p}\)</span> by <span class="math inline">\(n_{q}\)</span> data.frame, where <span class="math inline">\(n_{q}\)</span> is the number of available test statistics.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Extracting chromosome one</span>
+A<span class="fl">.1</span> =<span class="st"> </span>Exp@Data[[<span class="st">&quot;1&quot;</span>]];
+<span class="co"># Structure of a DCS chromosome</span>
+<span class="kw">str</span>(A<span class="fl">.1</span>);</code></pre></div>
+<pre><code>## Formal class 'DCSchr' [package &quot;DCS&quot;] with 6 slots
+##   ..@ chr    : chr &quot;1&quot;
+##   ..@ Coord  : int [1:325, 1:3] 76 76 76 76 76 76 76 76 76 76 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. ..$ : chr [1:325] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. .. ..$ : chr [1:3] &quot;i&quot; &quot;j&quot; &quot;d&quot;
+##   ..@ Counts : num [1:325, 1:4] 212 159.5 110.4 89.8 57.4 ...
+##   .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. ..$ : chr [1:325] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. .. ..$ : chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   ..@ groups : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 2
+##   ..@ samples: chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   ..@ Stats  :'data.frame':  0 obs. of  0 variables</code></pre>
+<p>An object of class <code>DCSexp</code> has the following slots:</p>
+<ul>
+<li><code>@chrs</code>, a character vector of chromosome names.</li>
+<li><code>@Data</code>, is a list of <code>DCSchr</code>s, with names corresponding to <code>@chrs</code>.</li>
+<li><code>@groups</code>, a factor of group assignments for the samples.</li>
+<li><code>@samples</code>, a character vector of sample names.</li>
+</ul>
+<p>Note that the <code>@groups</code> and <code>@samples</code> slots for the overall <code>DCSexp</code> should match the corresponding slots of the component <code>DCSchr</code>s.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Structure of a DCS experiment</span>
+<span class="kw">str</span>(Exp);</code></pre></div>
+<pre><code>## Formal class 'DCSexp' [package &quot;DCS&quot;] with 4 slots
+##   ..@ chrs   : chr [1:2] &quot;1&quot; &quot;2&quot;
+##   ..@ Data   :List of 2
+##   .. ..$ 1:Formal class 'DCSchr' [package &quot;DCS&quot;] with 6 slots
+##   .. .. .. ..@ chr    : chr &quot;1&quot;
+##   .. .. .. ..@ Coord  : int [1:325, 1:3] 76 76 76 76 76 76 76 76 76 76 ...
+##   .. .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. .. .. ..$ : chr [1:325] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. .. .. .. .. ..$ : chr [1:3] &quot;i&quot; &quot;j&quot; &quot;d&quot;
+##   .. .. .. ..@ Counts : num [1:325, 1:4] 212 159.5 110.4 89.8 57.4 ...
+##   .. .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. .. .. ..$ : chr [1:325] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. .. .. .. .. ..$ : chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   .. .. .. ..@ groups : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 2
+##   .. .. .. ..@ samples: chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   .. .. .. ..@ Stats  :'data.frame': 0 obs. of  0 variables
+##   .. ..$ 2:Formal class 'DCSchr' [package &quot;DCS&quot;] with 6 slots
+##   .. .. .. ..@ chr    : chr &quot;2&quot;
+##   .. .. .. ..@ Coord  : int [1:325, 1:3] 76 76 76 76 76 76 76 76 76 76 ...
+##   .. .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. .. .. ..$ : chr [1:325] &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; ...
+##   .. .. .. .. .. ..$ : chr [1:3] &quot;i&quot; &quot;j&quot; &quot;d&quot;
+##   .. .. .. ..@ Counts : num [1:325, 1:4] 247.6 149.7 98.8 77.3 71.6 ...
+##   .. .. .. .. ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. .. .. .. .. ..$ : chr [1:325] &quot;3&quot; &quot;4&quot; &quot;5&quot; &quot;6&quot; ...
+##   .. .. .. .. .. ..$ : chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   .. .. .. ..@ groups : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 2
+##   .. .. .. ..@ samples: chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;
+##   .. .. .. ..@ Stats  :'data.frame': 0 obs. of  0 variables
+##   ..@ groups : Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 1 2 2
+##   ..@ samples: chr [1:4] &quot;Aux.R1&quot; &quot;Aux.R2&quot; &quot;Ctrl.R1&quot; &quot;Ctrl.R2&quot;</code></pre>
+</div>
+<div id="methods" class="section level4">
+<h4>Methods</h4>
+<ul>
+<li>A <code>summary</code> method is available for objects of class <code>DCSexp</code>. Two matrices are printed and returned. The first describes the pixels and maximal pixel separation for each chromosome in the experiment. The second describes the samples and their group assignments.</li>
+<li>A <code>subset</code> method is available for objects of class <code>DCSchr</code>. Subsetting by either pixel or maximal pixel separation is available. To subset by pixel, supply a logical vector with length equal to the number of pixels. To subset by pixel separation, provided a (numeric) maximal separation.</li>
+<li>A <code>subset</code> method is available for objects of class <code>DCSexp</code>. Subsetting by chromosome and maximal pixel separation is available. To subset by chromosome, specify the chromosomes to retain. To subset by pixel separation, provided a (numeric) maximal separation.</li>
+<li>An <code>as.data.frame</code> method is available for objects of class <code>DCSchr</code> and <code>DCSexp</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Summary of DCS Experiment</span>
+<span class="kw">cat</span>(<span class="st">&quot;DCS Experiment Summary:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+S =<span class="st"> </span><span class="kw">summary</span>(Exp);
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="co"># Subsetting a DCS Chromosome using a logical vector</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>A<span class="fl">.1</span>,<span class="dt">pix=</span>(A<span class="fl">.1</span>@Coord[,<span class="st">&quot;i&quot;</span>]==<span class="dv">80</span>));
+<span class="co"># Subsetting a DCS Chromosome</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>A<span class="fl">.1</span>,<span class="dt">dmax=</span><span class="dv">10</span>);
+<span class="co"># Subsetting a DCS Experiment</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>Exp,<span class="dt">chrs=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>),<span class="dt">dmax=</span><span class="dv">10</span>);
+<span class="co"># Coercion to data.frame</span>
+<span class="kw">cat</span>(<span class="st">&quot;Head of Experiment Matrix, Chromosome 1, Max Separation 10, following Coercion:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+S.df =<span class="st"> </span><span class="kw">as.data.frame</span>(S);
+<span class="kw">head</span>(S.df);</code></pre></div>
+<pre><code>## DCS Experiment Summary:
+##   Chr Pixels dMax
+## 1   1    325   24
+## 2   2    325   24
+## 
+##    Sample Group
+## 1  Aux.R1     0
+## 2  Aux.R2     0
+## 3 Ctrl.R1     1
+## 4 Ctrl.R2     1
+## 
+## Head of Experiment Matrix, Chromosome 1, Max Separation 10, following Coercion:
+##   Chr  i  j d    Aux.R1   Aux.R2   Ctrl.R1   Ctrl.R2
+## 1   1 76 76 0 212.04500 77.02086 152.96079 105.11542
+## 2   1 76 77 1 159.54523 73.57463  90.55706 105.65917
+## 3   1 76 78 2 110.35403 38.92145  81.86155  59.86963
+## 4   1 76 79 3  89.76870 22.50423  19.32057  26.18310
+## 5   1 76 80 4  57.42157 15.05683  61.28800  37.02741
+## 6   1 76 81 5  31.44170  7.23277  33.97521  34.99212</code></pre>
+</div>
+</div>
+<div id="focal-stat-objects" class="section level2">
+<h2>Focal Stat Objects</h2>
+<div id="structure-1" class="section level4">
+<h4>Structure</h4>
+<p>An object of class <code>FSchr</code> has the following slots:</p>
+<ul>
+<li><code>@chr</code>, a string naming the chromosome.</li>
+<li><code>@foci</code>, a numeric vector of foci. A <strong>focus</strong> refers to a pixel for which <span class="math inline">\(i = j\)</span>, i.e. a pixel on the diagonal of the contact matrix.</li>
+<li><code>@groups</code>, a factor naming the groups. Data in an <code>FSchr</code> are summarized at the group level.</li>
+<li><code>@Stats</code>, a list of data.frames with names corresponding to <code>@groups</code>. Each data frame is <span class="math inline">\(n_{f}\)</span> by <span class="math inline">\(n_{q}\)</span>, where <span class="math inline">\(n_{f}\)</span> is the number of foci, and <span class="math inline">\(n_{q}\)</span> is the number of available statistics.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Extracting chromosome one</span>
+B<span class="fl">.1</span> =<span class="st"> </span>DCS::B@Data[[<span class="st">&quot;1&quot;</span>]];
+<span class="co"># Structure of a FS chromosome</span>
+<span class="kw">str</span>(B<span class="fl">.1</span>);</code></pre></div>
+<pre><code>## Formal class 'FSchr' [package &quot;DCS&quot;] with 4 slots
+##   ..@ chr   : chr &quot;1&quot;
+##   ..@ foci  : num [1:25] 76 77 78 79 80 81 82 83 84 85 ...
+##   ..@ groups: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2
+##   ..@ Stats :List of 2
+##   .. ..$ 0:'data.frame': 25 obs. of  3 variables:
+##   .. .. ..$ Border : num [1:25] NA 2.98 3.31 3.32 3.27 ...
+##   .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...
+##   .. ..$ 1:'data.frame': 25 obs. of  3 variables:
+##   .. .. ..$ Border : num [1:25] NA 2.93 3.04 3.32 2.97 ...
+##   .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>An object of class <code>FSexp</code> has the following slots:</p>
+<ul>
+<li><code>@chrs</code>, a character vector of chromosome names.</li>
+<li><code>@Data</code>, a list of <code>FSchr</code>s, with names corresponding to <code>@chrs</code>.</li>
+<li><code>@groups</code>, a factor naming the groups. Data in an <code>FSexp</code> are summarized at the group level.</li>
+</ul>
+<p>Note that the <code>@groups</code> slots for the overall <code>FSexp</code> should match the corresponding slot of the component <code>FSchr</code>s.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Structure of a FS experiment</span>
+<span class="kw">str</span>(DCS::B);</code></pre></div>
+<pre><code>## Formal class 'FSexp' [package &quot;DCS&quot;] with 3 slots
+##   ..@ chrs  : chr [1:2] &quot;1&quot; &quot;2&quot;
+##   ..@ groups: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2
+##   ..@ Data  :List of 2
+##   .. ..$ 1:Formal class 'FSchr' [package &quot;DCS&quot;] with 4 slots
+##   .. .. .. ..@ chr   : chr &quot;1&quot;
+##   .. .. .. ..@ foci  : num [1:25] 76 77 78 79 80 81 82 83 84 85 ...
+##   .. .. .. ..@ groups: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2
+##   .. .. .. ..@ Stats :List of 2
+##   .. .. .. .. ..$ 0:'data.frame':    25 obs. of  3 variables:
+##   .. .. .. .. .. ..$ Border : num [1:25] NA 2.98 3.31 3.32 3.27 ...
+##   .. .. .. .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. .. .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...
+##   .. .. .. .. ..$ 1:'data.frame':    25 obs. of  3 variables:
+##   .. .. .. .. .. ..$ Border : num [1:25] NA 2.93 3.04 3.32 2.97 ...
+##   .. .. .. .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. .. .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...
+##   .. ..$ 2:Formal class 'FSchr' [package &quot;DCS&quot;] with 4 slots
+##   .. .. .. ..@ chr   : chr &quot;2&quot;
+##   .. .. .. ..@ foci  : num [1:25] 76 77 78 79 80 81 82 83 84 85 ...
+##   .. .. .. ..@ groups: Factor w/ 2 levels &quot;0&quot;,&quot;1&quot;: 1 2
+##   .. .. .. ..@ Stats :List of 2
+##   .. .. .. .. ..$ 0:'data.frame':    25 obs. of  3 variables:
+##   .. .. .. .. .. ..$ Border : num [1:25] NA 3.86 3.6 3.52 3.51 ...
+##   .. .. .. .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. .. .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...
+##   .. .. .. .. ..$ 1:'data.frame':    25 obs. of  3 variables:
+##   .. .. .. .. .. ..$ Border : num [1:25] NA 3.93 4.09 4.1 3.81 ...
+##   .. .. .. .. .. ..$ minPix : num [1:25] NA 1 3 6 10 15 21 28 36 45 ...
+##   .. .. .. .. .. ..$ minProp: num [1:25] NA 1 1 1 1 1 1 1 1 1 ...</code></pre>
+</div>
+<div id="methods-1" class="section level4">
+<h4>Methods</h4>
+<ul>
+<li>A <code>subset</code> method is available for objects of class <code>FSchr</code>. Subsetting by focus and group is available. To subset by focus, supply a logical vector with length equal to the number of foci. To subset by group, specify the group(s) to retain.</li>
+<li>A <code>subset</code> method is available for objects of class <code>FSexp</code>. Subsetting by chromosome and group is available. To subset chromosome, specify the chromosome(s) to retain. To subset by group, specify the group(s) to retain.</li>
+<li>An <code>as.data.frame</code> method is available for objects of class <code>FSchr</code> and <code>FSexp</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(<span class="st">&quot;Number of Foci:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+(<span class="dt">nf =</span> <span class="kw">length</span>(B<span class="fl">.1</span>@foci));
+<span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>);
+<span class="co"># Subsetting a FSchr using a logical vector</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>B<span class="fl">.1</span>,<span class="dt">foci=</span><span class="kw">c</span>(<span class="kw">rep</span>(T,<span class="dv">10</span>),<span class="kw">rep</span>(F,nf<span class="dv">-10</span>)));
+<span class="co"># Subsetting a FSchr by group</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>B<span class="fl">.1</span>,<span class="dt">group=</span><span class="kw">c</span>(<span class="st">&quot;0&quot;</span>));
+<span class="co"># Subsetting a FSexp by chromsome and group</span>
+S =<span class="st"> </span><span class="kw">subset</span>(<span class="dt">x=</span>B,<span class="dt">chrs=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>),<span class="dt">group=</span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>));
+<span class="co"># Coercion to data.frame</span>
+<span class="kw">cat</span>(<span class="st">&quot;Head of Border Score Matrix, Chromosome 1, Group 1, following Coercion:</span><span class="ch">\n</span><span class="st">&quot;</span>);
+S.df =<span class="st"> </span><span class="kw">as.data.frame</span>(S);
+<span class="kw">head</span>(S.df);</code></pre></div>
+<pre><code>## Number of Foci:
+## [1] 25
+## 
+## Head of Border Score Matrix, Chromosome 1, Group 1, following Coercion:
+##   Chr Group Focus   Border minPix minProp
+## 1   1     0    76       NA     NA      NA
+## 2   1     0    77 2.984121      1       1
+## 3   1     0    78 3.307178      3       1
+## 4   1     0    79 3.320516      6       1
+## 5   1     0    80 3.274793     10       1
+## 6   1     0    81 3.072905     15       1</code></pre>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

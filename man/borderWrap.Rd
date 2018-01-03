@@ -4,14 +4,10 @@
 \alias{borderWrap}
 \title{Wrapper Function for Chromosome-level Border Score Calculation}
 \usage{
-borderWrap(W, s, g, agg)
+borderWrap(A, agg = sum)
 }
 \arguments{
-\item{W}{Chromosome-level data from HiC experiment.}
-
-\item{s}{Sample names.}
-
-\item{g}{Group assignments.}
+\item{A}{Chromosome-level data from HiC experiment.}
 
 \item{agg}{FUNCTION for signal aggregation within each region. Defaults to sum.}
 }

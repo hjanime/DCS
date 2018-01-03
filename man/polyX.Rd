@@ -9,7 +9,10 @@ polyX(r)
 \arguments{
 \item{r}{Pixel coords (i,j);}
 }
+\value{
+Numeric vector of x-coordinates for heatmap.
+}
 \description{
-Starting from the left-most vertex and proceeding clockwise, enumerates the
-x-coordinates of a pixel's vertices.
+Starting from the left-most vertex and proceeding counter-clockwise,
+enumerates the x-coordinates of a pixel's vertices.
 }

@@ -1,0 +1,23 @@
+---
+title: "README"
+author: "Zachary McCaw"
+date: "Updated: 11/27/2017"
+output: github_document
+--- 
+# Contents
+
+* [Formatting and Class Definitions](#formatting-and-class-definitions)
+* [Border Scores](#border-scores)
+* [Visualization](#visualization)
+
+# Formatting and Class Definitions
+```{r,child='vignettes/Formatting_ClassDefinitions.Rmd'}
+```
+
+# Border Scores
+```{r,child='vignettes/BoundaryScores.Rmd'}
+```
+
+# Visualization
+```{r,child='vignettes/Visualization.Rmd'}
+```

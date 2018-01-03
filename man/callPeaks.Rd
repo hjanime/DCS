@@ -4,10 +4,10 @@
 \alias{callPeaks}
 \title{Call Peaks}
 \usage{
-callPeaks(x, b, h, t)
+callPeaks(foci, b, h, t)
 }
 \arguments{
-\item{x}{Focus coordinates.}
+\item{foci}{Focus coordinate.}
 
 \item{b}{Border score.}
 
@@ -16,7 +16,7 @@ callPeaks(x, b, h, t)
 \item{t}{Border score threshold.}
 }
 \description{
-Scans across a chromosome. Calculates the mean and variance of the
-border score within the window. Identifies foci with a standardized
-border score above the threshold.
+Scans across a chromosome. Calculates the mean and variance of the border
+score within the window [focus-h,focus+h]. Identifies foci with a
+standardized border score above the threshold.
 }

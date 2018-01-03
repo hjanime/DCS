@@ -10,9 +10,10 @@ Pixels(s)
 \item{s}{Sequence of foci.}
 }
 \value{
-Data frame containing pixel coordinates (i,j) and unique identifiers.
+Data.frame containing pixel coordinates (i,j) and a unique identifier in
+  the form (1+i-min(i),1+j-min(i)).
 }
 \description{
-Given a sequence of foci, enumerates coordinates of all pixels included in
+Given a sequence of foci, enumerates coordinates of all pixels included in 
 the heatmap.
 }

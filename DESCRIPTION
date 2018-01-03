@@ -2,14 +2,30 @@ Package: DCS
 Title: Differential Contact Score
 Version: 0.0.0.9000
 Authors@R: person("Zachary", "McCaw", email = "zmccaw@g.harvard.edu", role = c("aut", "cre"))
-Description: Workflow to identify genomic foci across which chromosomal contacts differ by experimental condition, using HiC data.
+Description: This package provides an approach for using HiC data to identify loci across which chromosomal contacts differ by a grouping factor. 
 Depends: R (>= 3.2.2)
-License: What license is it under?
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
-Imports: doMC,
-    foreach
-Suggests: knitr,
+RoxygenNote: 6.0.1
+Imports: cowplot,
+    data.table,
+    foreach,
+    ggplot2,
+    Matrix,
+    methods,
+    plyr,
+    reshape2
+Suggests: doMC,
+    knitr,
     rmarkdown
 VignetteBuilder: knitr
+Collate: 
+    'ClassDefinitions.R'
+    'BorderScore.R'
+    'DataSets.R'
+    'Formatting.R'
+    'Normalization.R'
+    'Preprocessing.R'
+    'Segmentation.R'
+    'Visualization.R'

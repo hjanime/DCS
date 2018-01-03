@@ -9,7 +9,10 @@ polyY(r)
 \arguments{
 \item{r}{Pixel coords (i,j);}
 }
+\value{
+Numeric vector of y-coordinates for heatmap.
+}
 \description{
-Starting from the left-most vertex and proceeding clockwise, enumerates the
-y-coordinates of a pixel's vertices.
+Starting from the left-most vertex and proceeding counter-clockwise,
+enumerates the y-coordinates of a pixel's vertices.
 }

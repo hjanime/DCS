@@ -1,0 +1,89 @@
+---
+title: "Boundary Scores"
+author: "Zachary McCaw"
+date: "Updated: 10/30/2017"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Boundary Scores}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Contents
+
+This vignette starts from an assembled `DCSexp`, and documents data normalization and boundary calling. For a guide to assembling the `DCSexp`, and descriptions of the object classes used in this package, see the vignette on **formatting and class definitions**.
+
+* [Pre-processing](#pre-processing)
+* [Normalization](#normalization)
+* [Boundary Calling](#boundary-calling)
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.width=1.5*3, fig.height=1.5*2, fig.align="center", fig.path='Figs/',echo=T, warning=F, message=F, cache=T, results='hold');
+# rmarkdown::latex_dependency(name="bm")
+```
+
+```{r, echo=F}
+# Auxin 
+A1 = DCS::Auxin_rep1;
+A2 = DCS::Auxin_rep2;
+# Control
+C1 = DCS::Control_rep1;
+C2 = DCS::Control_rep2;
+# Combine sparse matrices for individual chromosomes within a sample
+Auxin1 = DCS::createDCSsmp(L=A1,chr=c("1","2"),smp="Aux.R1",group=0);
+Auxin2 = DCS::createDCSsmp(L=A2,chr=c("1","2"),smp="Aux.R2",group=0);
+Ctrl1 = DCS::createDCSsmp(L=C1,chr=c("1","2"),smp="Ctrl.R1",group=1);
+Ctrl2 = DCS::createDCSsmp(L=C2,chr=c("1","2"),smp="Ctrl.R2",group=1);
+# Combine samples into an experiment
+Exp = DCS::createDCSexp(L=list(Auxin1,Auxin2,Ctrl1,Ctrl2));
+```
+
+## Pre-processing
+
+`preProcess` provides two functionalities. If `miss=T`, then all pixels within the maximal pixel separation for which measurements are missing are imputed to zeros. If `zero=T`, then all pixels corresponding to empty _foci_ are subsequently removed. A _focus_ refers to a pixel for which $i = j$, i.e. a pixel on the diagonal of the contact matrix. 
+
+```{r, include=T}
+# Preprocess
+Exp = DCS::preProcess(X=Exp,miss=T,zero=T);
+```
+
+## Normalization
+
+`diagNormalize` rescales the input signals such that the mean intensity for a given pixel separation $d$ is the same in all samples. This approach assumes that if all samples were sequenced to the same depth, then the expected interaction strength between loci at a given separation $d$, averaging across the genome, should not differ across samples. `scaleFactors` provides the sample by separation specific scale factors. `plotNormCurves` plots the signal by separation decay curves before and after normalization. `addLFC` is used to calculate the $\log_{2}$ fold change, comparing each group to the first.  
+
+```{r, fig.width=2.5*3}
+# Normalization
+Z = DCS::diagNormalize(X=Exp);
+# Scale factors
+cat("Scale Factors:\n");
+head(DCS::scaleFactors(Exp));
+# Plot normalization curves
+DCS::plotNormCurves(X=Exp,Z=Z);
+# Add post-normalization log fold change to experiment
+cat("\n");
+cat("Post Normalization LFC:\n")
+Z = DCS::addLFC(Z);
+head(Z);
+```
+
+## Boundary Calling
+
+#### Border Scores
+
+`BorderScores` calculates a border score by comparing the mean signal in potential intra-TAD regions upstream and downstream of a focus, with the mean signal in the inter-TAD region. Border scores are calculated separately for each group, and stored in the object of class `FSexp`. Two quality metrics are provided, the minimum number of pixels observed in any of the aggregation regions, and the minimum proportion of pixels observed in any of the aggregation regions. A value of `NA` for the quality metrics indicates that at least one of the aggregation regions was empty.   
+
+```{r, include=T}
+B = DCS::BorderScores(X=Z);
+head(B);
+```
+
+#### Segmentation
+
+`callBoundaries` uses the border score to identify candidate, group-specific boundaries. A sliding window of length $2h$ is scanned across each chromosome. Within the window, the local mean $\mu$ and standard deviation $\sigma$ are calculated. A z-score $Z_{j}$ is calculated for each focus $j$ in the window using $(\mu,\sigma)$. Foci with $Z_{j}$ greater than or equal to the threshold $t$ are taken as candidate boundaries. To ensure sufficient spacing between boundaries, if multiple candidates are within distance $w$ of one another, that boundary with the highest border score is retained as the representative. 
+
+```{R, include=T}
+# Segment
+C = DCS::callBoundaries(B=B,h=20,w=10,t=1);
+cat("Candidate Boundaries:\n");
+print(C);
+```

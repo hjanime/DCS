@@ -16,9 +16,13 @@ polyCoord(h.u, h.d, l.u, l.d)
 \item{l.d}{Length of downstream flank in pixels}
 }
 \value{
-List containing 1. the polygon centers, and 2. the polygon vertices
+List containing 1. the polygon centers, and 2. the polygon vertices. 
+  \code{Centers} is a data.frame containing (x,y) coordinates of the pixel
+  centers and the pixel id. \code{Vertices} is a data.frame containing (x,y)
+  coordinates of the pixel vertices, the pixel id, and the order in which
+  vertices are connected.
 }
 \description{
-Given the base height and flank, enumerates the vertices of pixels that
-are connected to form the heatmap.
+Given the base height and flank, enumerates the vertices of pixels that are
+connected to form the heatmap.
 }

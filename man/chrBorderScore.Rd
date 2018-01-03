@@ -4,10 +4,10 @@
 \alias{chrBorderScore}
 \title{Chromosome-level Border Score Calculation}
 \usage{
-chrBorderScore(W, agg = sum)
+chrBorderScore(G, agg = sum)
 }
 \arguments{
-\item{W}{Chromosome level matrix structured as (i,j,Stat);}
+\item{G}{Chromosome level data structured as (i,j,groupMean)}
 
 \item{agg}{FUNCTION for signal aggregation within each region. Defaults to sum.}
 }

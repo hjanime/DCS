@@ -2,16 +2,20 @@
 % Please edit documentation in R/Visualization.R
 \name{Smooth}
 \alias{Smooth}
-\title{Loess Smooth against Separation}
+\title{Smooth Signal}
 \usage{
 Smooth(X)
 }
 \arguments{
-\item{X}{Matrix of the form (i,j,Signal)}
+\item{X}{Data table of the form (i,j,Signal)}
 }
 \value{
-Smoothed matrix.
+Data table including the coordinates, original signal, pixel
+  separation, and fitted values
 }
 \description{
-Loess Smooth against Separation
+Smooths the signal against pixel separation. If there are
+fewer than 10 observations, a simple mean is taken. If between 10 and 20
+observations, linear loess is applied. If greater than 20 observations,
+quadratic loess is applied.
 }

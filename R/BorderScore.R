@@ -1,6 +1,9 @@
-#' Purpose : Functions to calculate a border score for each focus in the genome.
-#' Border scores compare the signal intensity in a putative inter-TAD region with
-#' the mean border score in the flanking regions. 
+#' @include ClassDefinitions.R
+NULL
+
+# Purpose : Functions to calculate a border score for each focus in the genome.
+# Border scores compare the signal intensity in a candidate inter-TAD region with
+# the mean border score in the flanking regions. 
 
 #' Enumerate Inter-Tad Region
 #' 
@@ -12,7 +15,7 @@
 #' @param d Maximum pixel separation. 
 #' @param l Lower bound on pixel indices. 
 #' @param u Upper bound on pixel indices.  
-#' @import plyr
+#' @importFrom plyr llply
 
 triCoord = function(f,d,l,u){
   # f : Focus
@@ -44,7 +47,7 @@ triCoord = function(f,d,l,u){
 #' @param d Maximum pixel separation. 
 #' @param l Lower bound on pixel indices. 
 #' @param u Upper bound on pixel indices. 
-#' @import plyr 
+#' @importFrom plyr llply
 
 triCoordLeft = function(f,d,l,u){
   # f : Focus
@@ -79,7 +82,7 @@ triCoordLeft = function(f,d,l,u){
 #' @param d Maximum pixel separation. 
 #' @param l Lower bound on pixel indices. 
 #' @param u Upper bound on pixel indices.  
-#' @import plyr
+#' @importFrom plyr llply
 
 triCoordRight = function(f,d,l,u){
   # Upper Left of Region
@@ -104,55 +107,56 @@ triCoordRight = function(f,d,l,u){
 #' For each focus, aggregates signal in the inter-TAD region, and within the
 #' upstream and downstream intra-TAD regions. Calculates a border score as the 
 #' ratio of mean signal in the intra-TAD regions to mean signal in the inter-TAD region.
-#' @param W Chromosome level matrix structured as (i,j,Stat);
+#' @param G Chromosome level data structured as (i,j,groupMean)
 #' @param agg FUNCTION for signal aggregation within each region. Defaults to sum.
 #' @return A matrix containing the focus, region summary statistics, and the border
 #' score. Regions (A,B,C) refer to the upstream, downstream, and inter-TAD regions 
 #' respectively. Signal is the aggregated signal in the region. Pixels is the total 
 #' number of pixels in the region, and prop is the proportion of pixels which 
 #' were populated. 
-#' @import plyr
+#' @importFrom plyr alply
 
-chrBorderScore = function(W,agg=sum){
+chrBorderScore = function(G,agg=sum){
   
   # Restrict to positions where i = j
-  Foci = W[W[,1]==W[,2],];
+  Foci = G[G[,"i"]==G[,"j"],];
   # Upper limit
-  l = min(W[,1]);
-  u = max(W[,2]);
-  # Separation
-  d = max(abs(W[,1]-W[,2]));
-  # Function to calculate border score
-  # x is a row of W
-  aux = function(x){
+  l = min(G[,"i"]);
+  u = max(G[,"j"]);
+  # Maximum Separation
+  dmax = max(G[,"d"])
+  # Function to calculate border score; r is a row of G.
+  aux = function(r){
     # Focus
-    current.focus = as.numeric(x[1]);
+    current.focus = as.numeric(r[1]);
+    # Null vector, in case one of the signal regions is empty
+    nullvec = c(current.focus,rep(NA,times=10));
     # Upstream TAD
-    A = triCoordLeft(f=current.focus,d=d,l=l,u=u);
+    A = triCoordLeft(f=current.focus,d=dmax,l=l,u=u);
     mA = nrow(A);
-    if(is.null(mA)){return()};
+    if(is.null(mA)){return(nullvec)};
     # Downstream TAD
-    B = triCoordRight(f=current.focus,d=d,l=l,u=u);
+    B = triCoordRight(f=current.focus,d=dmax,l=l,u=u);
     mB = nrow(B);
-    if(is.null(mB)){return()};
+    if(is.null(mB)){return(nullvec)};
     # Inter-TAD Region
-    C = triCoord(f=current.focus,d=d,l=l,u=u);
+    C = triCoord(f=current.focus,d=dmax,l=l,u=u);
     mC = nrow(C);
-    if(is.null(mC)){return()};
+    if(is.null(mC)){return(nullvec)};
     # Merge in statistic
     colnames(A) = colnames(B) = colnames(C) = c("i","j");
     # Merge in statistic
-    A = merge(x=A,y=W,by=c("i","j"));
-    B = merge(x=B,y=W,by=c("i","j"));
-    C = merge(x=C,y=W,by=c("i","j"));
+    A = merge(x=A,y=G,by=c("i","j"));
+    B = merge(x=B,y=G,by=c("i","j"));
+    C = merge(x=C,y=G,by=c("i","j"));
     # Occupied cells
     oA = nrow(A);
     oB = nrow(B);
     oC = nrow(C);
     # Aggregate
-    if(nrow(A)==0){sA=0} else {sA = (1/mA)*agg(A[,3]);};
-    if(nrow(B)==0){sB=0} else {sB = (1/mB)*agg(B[,3]);};
-    if(nrow(C)==0){sC=0} else {sC = (1/mC)*agg(C[,3]);};
+    if(nrow(A)==0){sA=0} else {sA = (1/mA)*agg(A[,"groupMean"]);};
+    if(nrow(B)==0){sB=0} else {sB = (1/mB)*agg(B[,"groupMean"]);};
+    if(nrow(C)==0){sC=0} else {sC = (1/mC)*agg(C[,"groupMean"]);};
     # Region A
     outA = c(sA,mA,oA/mA);
     names(outA) = c("signalA","pixelsA","propA");
@@ -175,40 +179,42 @@ chrBorderScore = function(W,agg=sum){
 
 #' Wrapper Function for Chromosome-level Border Score Calculation
 #' 
-#' @param W Chromosome-level data from HiC experiment.
-#' @param s Sample names.
-#' @param g Group assignments. 
+#' @param A Chromosome-level data from HiC experiment.
 #' @param agg FUNCTION for signal aggregation within each region. Defaults to sum.
+#' @importFrom foreach "%do%" foreach
 
-borderWrap = function(W,s,g,agg){
-  # Chromosome
-  chr = unique(W$Chr);
-  chr2 = unique(W$Chr2);
+borderWrap = function(A,agg=sum){
+  # Samples
+  s = A@samples;
+  ns = length(s);
   # Group levels
+  g = A@groups;
   L = sort(unique(g));
   ng = length(L);
+  # Foci
+  i = j = NULL; 
+  foci = A@Coord[A@Coord[,"i"]==A@Coord[,"j"],"i"];
   # Loop over groups
-  B = foreach(i=1:ng,.combine="rbind") %do% {
-    # Samples to subset
-    s.sub = s[g==L[i]]
-    # Subset
-    Sub = W[,s.sub,drop=F];
+  B = foreach(i=1:ng) %do% {
+    # Counts
+    Counts = A@Counts;
+    # Subset group
+    Sub = Counts[,g==L[i],drop=F];
     if(ncol(Sub)>1){Sub = apply(Sub,MARGIN=1,FUN=mean)};
-    Sub = data.frame(W[,c("i","j")],Sub);
-    colnames(Sub)[3] = "groupMean";
+    # Bind group mean to coordinates
+    G = cbind(A@Coord,Sub);
+    colnames(G)[4] = "groupMean";
     # Calculate border scores
-    B = data.frame(chrBorderScore(W=Sub,agg=agg));
-    B$Group = paste0("g",L[i]);
-    return(B);
+    C = data.frame(chrBorderScore(G=G,agg=agg));
+    # Quality Metrics
+    C$minPix = apply(C[,c("pixelsA","pixelsB","pixelsC")],MARGIN=1,FUN=min);
+    C$minProp = apply(C[,c("propA","propB","propC")],MARGIN=1,FUN=min);
+    C = C[,c("Border","minPix","minProp")];
+    return(C);
   }
-  Out = B[,c("Focus","Group","Border")];
-  # Quality metrics
-  Out$minPix = apply(B[,c("pixelsA","pixelsB","pixelsC")],MARGIN=1,FUN=min);
-  Out$minProp = apply(B[,c("propA","propB","propC")],MARGIN=1,FUN=min);
-  # Format
-  Out$Chr = chr;
-  Out$Chr2 = chr2;
-  Out = Out[,c("Focus","Chr","Chr2","Group","Border","minPix","minProp")]
+  names(B) = L;
+  # Format as FSchr
+  Out = new(Class="FSchr",chr=A@chr,foci=foci,groups=L,Stats=B)
   return(Out);
 };
 
@@ -223,26 +229,16 @@ borderWrap = function(W,s,g,agg){
 #' observed in one of the aggregation regions.
 #' 
 #' @param X HiC experiment.
-#' @param s Sample names.
-#' @param g Sample group assignments.
-#' @param agg agg FUNCTION for signal aggregation within each region. Defaults
-#'   to sum.
-#' @param cores Cores to use if running in parallel.
+#' @param agg Function used to aggregate signal within each region. 
+#' @param parallel Run in parallel? Must register parallel backend first. 
 #' @return Returns a list with one data.frame per group.
+#' @importFrom methods new
 #' @export
 
-getBorderScores = function(X,s,g,agg=sum,cores=1){
+BorderScores = function(X,agg=sum,parallel=F){
   # Obtain border scores for each chromosome
-  A = expApply(X=X,f=borderWrap,cores=cores,s=s,g=g,agg=agg);
-  # Collapse experiment
-  A = do.call(rbind,A);
-  row.names(A) = NULL;
-  # Create separate data.frame for each group
-  L = sort(unique(A$Group));
-  ng = length(L);
-  Out = foreach(i=1:ng) %do% {
-    return(A[A$Group==L[i],])
-  }
-  names(Out) = L;
+  B = apply.DCSexp(X=X,f=borderWrap,exp.out=F,parallel=parallel,agg=agg);
+  # Bind into FSexp
+  Out = new(Class="FSexp",chrs=X@chrs,groups=B[[1]]@groups,Data=B);
   return(Out);
 }
