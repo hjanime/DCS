@@ -21,6 +21,7 @@ Suggests: doMC,
     rmarkdown
 VignetteBuilder: knitr
 Collate: 
+    'Utilities.R'
     'ClassDefinitions.R'
     'BorderScore.R'
     'DataSets.R'
